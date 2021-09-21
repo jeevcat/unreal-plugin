@@ -18,6 +18,7 @@ jobs:
 
   # This workflow contains a single job called "build"
   build:
+    runs-on: ubuntu-latest
     container:
       image: cloud.canister.io:5000/jeevcat/ue4-full:4.27.0-linux
       credentials:
