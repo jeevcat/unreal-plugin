@@ -21,6 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: cloud.canister.io:5000/jeevcat/ue4-full:4.27.0-linux
+      options: --user root -v ${{ github.workspace }}:${{ github.workspace }}:rw
       credentials:
          username: jeevcat
          password: ${{ secrets.CANISTER_PASSWORD }}
