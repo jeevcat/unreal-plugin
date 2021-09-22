@@ -24,7 +24,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Package plugin
-        run: ue4 package
+        run: ue4 package -NoPCH -NoSharedPCH -DisableUnity
 
       - uses: actions/upload-artifact@v2
         with:

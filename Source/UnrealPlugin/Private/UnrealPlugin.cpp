@@ -16,5 +16,5 @@ void FUnrealPluginModule::ShutdownModule()
 }
 
 #undef LOCTEXT_NAMESPACE
-	
+
 IMPLEMENT_MODULE(FUnrealPluginModule, UnrealPlugin)
