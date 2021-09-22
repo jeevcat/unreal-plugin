@@ -11,6 +11,16 @@ on:
   workflow_dispatch:
 
 jobs:
+  format:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: DoozyX/clang-format-lint-action@v0.12
+      with:
+        source: 'Source'
+        clangFormatVersion: 12
+
   build:
     runs-on: self-hosted
     container:
