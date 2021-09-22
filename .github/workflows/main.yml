@@ -36,3 +36,9 @@ jobs:
         run: |
           ls
           ue4 package
+          ls
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: packaged
+          path: dist
