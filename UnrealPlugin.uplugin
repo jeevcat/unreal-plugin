@@ -14,12 +14,21 @@
 	"IsBetaVersion": false,
 	"IsExperimentalVersion": false,
 	"Installed": false,
+	"SupportedTargetPlatforms": [
+		"Win64",
+		"Mac",
+		"Linux"
+	],
 	"Modules": [
 		{
 			"Name": "UnrealPlugin",
 			"Type": "Runtime",
-			"LoadingPhase": "Default",
-			"WhitelistPlatforms": ["AllDesktop"]
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "HttpRequests",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
 		}
 	]
 }
