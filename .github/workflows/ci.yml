@@ -38,15 +38,12 @@ jobs:
 
       - uses: actions/checkout@v2
         with:
-          path: Plugins
+          path: Plugins/UnrealPlugin
         name: 🛒 Checkout plugin
 
       - name: 🧪 Run tests
         run: |
           chown -R ue4:ue4 ${{ github.workspace }}
-          cd Plugins/UnrealPlugin
-          runuser -u ue4 -- ue4 build
-          cd ../..
           runuser -u ue4 -- ue4 test UnrealPlugin -- -ReportExportPath='$pwd/Saved/Automation/Reports'
       
       - name: 🏭 Generate JUnit report
