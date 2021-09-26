@@ -34,15 +34,17 @@ jobs:
       - uses: actions/checkout@v2
         with:
           repository: jeevcat/dummy-unreal-project
+        name: 🛒 Checkout dummy UE4 project
 
       - uses: actions/checkout@v2
         with:
           path: Plugins
+        name: 🛒 Checkout plugin
 
-      - name: Run tests
+      - name: 🧪 Run tests
         run: ue4 test UnrealPlugin
 
-      - name: Package plugin
+      - name: 📦 Package plugin
         run: |
           cd Plugins/UnrealPlugin
           ue4 package -NoPCH -NoSharedPCH -DisableUnity
@@ -51,3 +53,4 @@ jobs:
         with:
           name: packaged
           path: dist
+        name: 📁 Upload artifact
