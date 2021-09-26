@@ -3,10 +3,10 @@
 #include "ContextWidget.h"
 
 #include "Utils.h"
-#include "Widgets/SNullWidget.h"
 #include "Widgets/DeclarativeSyntaxSupport.h"
-#include "Widgets/Text/STextBlock.h"
 #include "Widgets/Layout/SBox.h"
+#include "Widgets/SNullWidget.h"
+#include "Widgets/Text/STextBlock.h"
 
 UContextWidget::UContextWidget()
 {
@@ -28,14 +28,7 @@ TSharedRef<SWidget> UContextWidget::RebuildWidget()
 	if (IsDesignTime())
 	{
 		MyBox->SetContent(
-			SNew(SBox)
-			.HAlign(HAlign_Center)
-			.VAlign(VAlign_Center)
-			[
-				SNew(STextBlock)
-				.Text(FText::FromName(GetFName()))
-			]
-			);
+			SNew(SBox).HAlign(HAlign_Center).VAlign(VAlign_Center)[SNew(STextBlock).Text(FText::FromName(GetFName()))]);
 	}
 
 	// Add any existing content to the new slate box
@@ -70,6 +63,7 @@ void UContextWidget::OnSlotRemoved(UPanelSlot* InSlot)
 		if (IsDesignTime())
 		{
 			MyBox->SetContent(
+				// clang-format off
 				SNew(SBox)
 				.HAlign(HAlign_Center)
 				.VAlign(VAlign_Center)
@@ -77,7 +71,8 @@ void UContextWidget::OnSlotRemoved(UPanelSlot* InSlot)
 					SNew(STextBlock)
 					.Text(FText::FromName(GetFName()))
 				]
-				);
+				// clang-format on
+			);
 		}
 	}
 }

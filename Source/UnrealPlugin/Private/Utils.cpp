@@ -1,6 +1,7 @@
 ﻿#include "Utils.h"
 
 UWidget* Utils::GetTypedParentWidget(UWidget* Widget, const TSubclassOf<UWidget> Type)
+
 {
 	UWidget* NextOuter = Widget;
 	while (NextOuter && NextOuter->Slot)

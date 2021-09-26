@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Interfaces/IHttpRequest.h"
+
 #include "HttpResponse.generated.h"
 
 USTRUCT(BlueprintType)

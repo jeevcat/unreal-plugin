@@ -2,8 +2,9 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
 #include "ContextWidget.h"
+#include "CoreMinimal.h"
+
 #include "ThemeContextWidget.generated.h"
 
 /**
@@ -14,7 +15,7 @@ class UNREALPLUGIN_API UThemeContextWidget final : public UContextWidget
 {
 	GENERATED_BODY()
 
-	public:
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FLinearColor Theme;
 };

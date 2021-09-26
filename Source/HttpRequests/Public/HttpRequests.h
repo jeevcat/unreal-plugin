@@ -5,5 +5,5 @@
 
 namespace HttpRequests
 {
-	void Get(const FString& Url, TFunction<void(FHttpResponse)> Callback);
+void Get(const FString& Url, TFunction<void(FHttpResponse)> Callback);
 }

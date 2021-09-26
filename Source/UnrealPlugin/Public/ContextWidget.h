@@ -2,9 +2,10 @@
 
 #pragma once
 
+#include "Components/ContentWidget.h"
 #include "CoreMinimal.h"
 #include "Widgets/SWidget.h"
-#include "Components/ContentWidget.h"
+
 #include "ContextWidget.generated.h"
 
 class SBox;
