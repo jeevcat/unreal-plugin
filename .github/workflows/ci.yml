@@ -44,7 +44,7 @@ jobs:
       - name: 🧪 Run tests
         run: ue4 test UnrealPlugin
       
-      - name: Generate JUnit report
+      - name: 🏭 Generate JUnit report
         run: |
           input = 'Saved/Automation/Reports/index.json'
           output = 'Saved/Automation/Reports/report.xml'
@@ -69,7 +69,7 @@ jobs:
           with open(output, 'w') as f:
               TestSuite.to_file(f, [ts], prettyprint=False)
 
-      - name: Publish Unit Test Results
+      - name: ⚗️ Publish Unit Test Results
         uses: EnricoMi/publish-unit-test-result-action@v1
         with:
           files: Saved/Automation/Reports/report.xml
