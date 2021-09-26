@@ -25,7 +25,7 @@ jobs:
     runs-on: self-hosted
     container:
       image: cloud.canister.io:5000/jeevcat/ue4-full:4.27.0-linux
-      options: --user root -v ${{ github.workspace }}:${{ github.workspace }}:rw
+      options: --user ue4 -v ${{ github.workspace }}:${{ github.workspace }}:rw
       credentials:
          username: jeevcat
          password: ${{ secrets.CANISTER_PASSWORD }}
@@ -45,6 +45,7 @@ jobs:
         run: ue4 test UnrealPlugin
       
       - name: 🏭 Generate JUnit report
+        shell: python
         run: |
           input = 'Saved/Automation/Reports/index.json'
           output = 'Saved/Automation/Reports/report.xml'
