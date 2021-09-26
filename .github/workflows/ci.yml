@@ -42,7 +42,7 @@ jobs:
         name: 🛒 Checkout plugin
 
       - name: 🧪 Run tests
-        run: runuser -u ue4 -- ue4 test UnrealPlugin
+        run: runuser -u ue4 -- ue4 test UnrealPlugin -- -ReportExportPath='$pwd/Saved/Automation/Reports'
       
       - name: 🏭 Generate JUnit report
         shell: python
