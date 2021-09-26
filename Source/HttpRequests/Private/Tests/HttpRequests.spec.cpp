@@ -17,15 +17,16 @@ void FHttpRequestsSpec::Define()
 			LatentIt("should return 200 and body", EAsyncExecution::ThreadPool,
 				[this](const FDoneDelegate TestDone)
 				{
-					HttpRequests::Get(TEXT("https://jsonplaceholder.typicode.com/posts/1"),
-						[this, TestDone](const FHttpResponse Response)
-						{
-							AddInfo(Response.Text);
-							TestEqual("Response code", Response.StatusCode, 200);
-							TestTrue("Text", Response.Text.Contains(
-												 "sunt aut facere repellat provident occaecati excepturi optio reprehenderit"));
-							TestDone.Execute();
-						});
+					HttpRequests::Get(TEXT("https://jsonplaceholder.typicode.com/posts/1"))
+						.Send(
+							[this, TestDone](const FHttpResponse Response)
+							{
+								AddInfo(Response.Text);
+								TestEqual("Response code", Response.StatusCode, 200);
+								TestTrue("Text", Response.Text.Contains(
+													 "sunt aut facere repellat provident occaecati excepturi optio reprehenderit"));
+								TestDone.Execute();
+							});
 				});
 
 			LatentIt("simultaneous requests should all return", EAsyncExecution::ThreadPool,
@@ -33,42 +34,73 @@ void FHttpRequestsSpec::Define()
 				{
 					for (int32 i = 0; i < TotalSimultaneousRequests; ++i)
 					{
-						HttpRequests::Get(FString::Printf(TEXT("https://jsonplaceholder.typicode.com/posts/%d"), i + 1),
-							[this, TestDone](const FHttpResponse Response)
-							{
-								TestEqual("Response code", Response.StatusCode, 200);
-
-								SimultaneousResponses.Add(Response);
-								if (SimultaneousResponses.Num() == TotalSimultaneousRequests)
+						HttpRequests::Get(FString::Printf(TEXT("https://jsonplaceholder.typicode.com/posts/%d"), i + 1))
+							.Send(
+								[this, TestDone](const FHttpResponse Response)
 								{
-									TestDone.Execute();
-								}
-							});
+									TestEqual("Response code", Response.StatusCode, 200);
+
+									SimultaneousResponses.Add(Response);
+									if (SimultaneousResponses.Num() == TotalSimultaneousRequests)
+									{
+										TestDone.Execute();
+									}
+								});
 					}
 				});
 
 			LatentIt("should deserialize JSON", EAsyncExecution::ThreadPool,
 				[this](const FDoneDelegate TestDone)
 				{
-					HttpRequests::Get(TEXT("https://jsonplaceholder.typicode.com/posts/1"),
-						[this, TestDone](const FHttpResponse Response)
-						{
-							TestEqual("Response code", Response.StatusCode, 200);
+					HttpRequests::Get(TEXT("https://jsonplaceholder.typicode.com/posts/1"))
+						.Send(
+							[this, TestDone](const FHttpResponse Response)
+							{
+								TestEqual("Response code", Response.StatusCode, 200);
 
-							const auto [UserId, Id, Title, Body] = Response.Json<FJsonPlaceholderPost>();
+								const auto [UserId, Id, Title, Body] = Response.Json<FJsonPlaceholderPost>();
 
-							TestEqual("UserId", UserId, 1);
-							TestEqual("Id", Id, 1);
-							TestEqual(
-								"Title", Title, TEXT("sunt aut facere repellat provident occaecati excepturi optio reprehenderit"));
-							TestEqual("Body", Body,
-								TEXT("quia et suscipit\n"
-									 "suscipit recusandae consequuntur expedita et cum\n"
-									 "reprehenderit molestiae ut ut quas totam\n"
-									 "nostrum rerum est autem sunt rem eveniet architecto"));
+								TestEqual("UserId", UserId, 1);
+								TestEqual("Id", Id, 1);
+								TestEqual("Title", Title,
+									TEXT("sunt aut facere repellat provident occaecati excepturi optio reprehenderit"));
+								TestEqual("Body", Body,
+									TEXT("quia et suscipit\n"
+										 "suscipit recusandae consequuntur expedita et cum\n"
+										 "reprehenderit molestiae ut ut quas totam\n"
+										 "nostrum rerum est autem sunt rem eveniet architecto"));
 
-							TestDone.Execute();
-						});
+								TestDone.Execute();
+							});
+				});
+		});
+
+	Describe("Post",
+		[this]
+		{
+			LatentIt("should return 200 and new resource", EAsyncExecution::ThreadPool,
+				[this](const FDoneDelegate TestDone)
+				{
+					constexpr int32 FakeUserId = 11;
+					const FString FakeTitle = TEXT("Foo");
+					const FString FakeBody = TEXT("Bar");
+					HttpRequests::Post(TEXT("https://jsonplaceholder.typicode.com/posts"))
+						.Json(FJsonPlaceholderPost{FakeUserId, -1, FakeTitle, FakeBody})
+						.Send(
+							[=](const FHttpResponse Response)
+							{
+								AddInfo(Response.Text);
+								TestEqual("Response code", Response.StatusCode, 201);
+
+								const auto [UserId, Id, Title, Body] = Response.Json<FJsonPlaceholderPost>();
+
+								TestEqual("UserId", UserId, FakeUserId);
+								TestEqual("Id", Id, 101);
+								TestEqual("Title", Title, FakeTitle);
+								TestEqual("Body", Body, FakeBody);
+
+								TestDone.Execute();
+							});
 				});
 		});
 }

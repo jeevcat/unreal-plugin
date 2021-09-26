@@ -1,9 +1,13 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
-#include "HttpResponse.h"
+#include "RequestBuilder.h"
 
 namespace HttpRequests
 {
-void Get(const FString& Url, TFunction<void(FHttpResponse)> Callback);
-}
+FRequestBuilder Get(const FString& Url);
+FRequestBuilder Post(const FString& Url);
+FRequestBuilder Put(const FString& Url);
+FRequestBuilder Patch(const FString& Url);
+FRequestBuilder Delete(const FString& Url);
+}	 // namespace HttpRequests
