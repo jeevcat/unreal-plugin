@@ -73,7 +73,7 @@ FRequestBuilder& FRequestBuilder::Query(const FStringFormatNamedArguments& Query
 void FRequestBuilder::Send(const TFunction<void(FHttpResponse)> Callback)
 {
 	Request->OnProcessRequestComplete().BindLambda(
-		[Callback](FHttpRequestPtr Request, const FHttpResponsePtr Response, bool bConnectedSuccessfully)
+		[Callback](FHttpRequestPtr, const FHttpResponsePtr Response, bool)
 		{
 			const FHttpResponse HttpResponse{Response};
 			Callback(HttpResponse);
