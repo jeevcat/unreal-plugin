@@ -42,9 +42,7 @@ jobs:
         name: 🛒 Checkout plugin
 
       - name: 🧪 Run tests
-        run: |
-          su - ue4
-          ue4 test UnrealPlugin
+        run: runuser -u ue4 -- ue4 test UnrealPlugin
       
       - name: 🏭 Generate JUnit report
         shell: python
