@@ -43,6 +43,36 @@ jobs:
 
       - name: 🧪 Run tests
         run: ue4 test UnrealPlugin
+      
+      - name: Generate JUnit report
+        run: |
+          input = 'Saved/Automation/Reports/index.json'
+          output = 'Saved/Automation/Reports/report.xml'
+
+          import json
+          from junit_xml import TestSuite, TestCase
+
+          with open(input, encoding='utf-8-sig') as f:
+              data = json.load(f)
+
+          cases = []
+          for t in data['tests']:
+              case = TestCase(
+                  name=t['testDisplayName'], classname=t['fullTestPath'], status=t['state'])
+              for e in t['entries']:
+                  event = e['event']
+                  case.add_failure_info(message=event['message'], failure_type=event['type'],
+                                          output=e['filename'] + ", line " + str(e['lineNumber']))
+              cases.append(case)
+          ts = TestSuite(name=data['clientDescriptor'],
+                          test_cases=cases, timestamp=data['reportCreatedOn'])
+          with open(output, 'w') as f:
+              TestSuite.to_file(f, [ts], prettyprint=False)
+
+      - name: Publish Unit Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        with:
+          files: Saved/Automation/Reports/report.xml
 
       - name: 📦 Package plugin
         run: |

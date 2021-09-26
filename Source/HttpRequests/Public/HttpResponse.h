@@ -21,5 +21,8 @@ struct FHttpResponse
 	}
 
 	UPROPERTY(BlueprintReadOnly)
+	int32 ResponseCode;
+
+	UPROPERTY(BlueprintReadOnly)
 	FString Content;
 };
