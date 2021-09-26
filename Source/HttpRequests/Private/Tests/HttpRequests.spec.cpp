@@ -3,6 +3,8 @@
 #include "JsonPlaceholderPost.h"
 #include "Misc/AutomationTest.h"
 
+// TODO Implement all requests documented in https://jsonplaceholder.typicode.com/guide/
+
 BEGIN_DEFINE_SPEC(FHttpRequestsSpec, "UnrealPlugin.HttpRequests",
 	EAutomationTestFlags::ProductFilter | EAutomationTestFlags::ApplicationContextMask)
 const int32 TotalSimultaneousRequests = 20;
