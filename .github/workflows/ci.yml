@@ -45,6 +45,11 @@ jobs:
         run: |
           chown -R ue4:ue4 ${{ github.workspace }}
           runuser -u ue4 -- ue4 test UnrealPlugin -- -ReportExportPath='$pwd/Saved/Automation/Reports'
+
+      - name: 🔪 Prep Python
+        run: |
+          sudo apt install python-is-python3
+          pip install junit_xml
       
       - name: 🏭 Generate JUnit report
         shell: python3 {0}
