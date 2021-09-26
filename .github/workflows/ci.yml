@@ -32,9 +32,20 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          repository: jeevcat/dummy-unreal-project
+
+      - uses: actions/checkout@v2
+        with:
+          path: Plugins
+
+      - name: Run tests
+        run: ue4 test UnrealPlugin
 
       - name: Package plugin
-        run: ue4 package -NoPCH -NoSharedPCH -DisableUnity
+        run: |
+          cd Plugins/UnrealPlugin
+          ue4 package -NoPCH -NoSharedPCH -DisableUnity
 
       - uses: actions/upload-artifact@v2
         with:
