@@ -33,8 +33,7 @@ jobs:
     steps:
       - name: 🔪 Prerequisites
         run: |
-          sudo apt update
-          sudo apt install python-is-python3 -y
+          echo alias python=python3 >> /home/ue4/.bashrc
           pip install junit_xml
 
       - uses: actions/checkout@v2
