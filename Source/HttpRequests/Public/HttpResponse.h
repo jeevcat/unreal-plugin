@@ -24,16 +24,16 @@ struct FHttpResponse
 	T Json() const;
 
 	UPROPERTY(BlueprintReadOnly)
-	int32 ResponseCode;
+	int32 StatusCode;
 
 	UPROPERTY(BlueprintReadOnly)
-	FString Content;
+	FString Text;
 };
 
 template <class T>
 T FHttpResponse::Json() const
 {
 	T OutData;
-	FJsonObjectConverter::JsonObjectStringToUStruct<T>(Content, &OutData);
+	FJsonObjectConverter::JsonObjectStringToUStruct<T>(Text, &OutData);
 	return OutData;
 }

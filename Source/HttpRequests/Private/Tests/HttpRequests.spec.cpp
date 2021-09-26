@@ -20,10 +20,10 @@ void FHttpRequestsSpec::Define()
 					HttpRequests::Get(TEXT("https://jsonplaceholder.typicode.com/posts/1"),
 						[this, TestDone](const FHttpResponse Response)
 						{
-							AddInfo(Response.Content);
-							TestEqual("Response code", Response.ResponseCode, 200);
-							TestTrue("Content", Response.Content.Contains(
-													"sunt aut facere repellat provident occaecati excepturi optio reprehenderit"));
+							AddInfo(Response.Text);
+							TestEqual("Response code", Response.StatusCode, 200);
+							TestTrue("Text", Response.Text.Contains(
+												 "sunt aut facere repellat provident occaecati excepturi optio reprehenderit"));
 							TestDone.Execute();
 						});
 				});
@@ -36,7 +36,7 @@ void FHttpRequestsSpec::Define()
 						HttpRequests::Get(FString::Printf(TEXT("https://jsonplaceholder.typicode.com/posts/%d"), i + 1),
 							[this, TestDone](const FHttpResponse Response)
 							{
-								TestEqual("Response code", Response.ResponseCode, 200);
+								TestEqual("Response code", Response.StatusCode, 200);
 
 								SimultaneousResponses.Add(Response);
 								if (SimultaneousResponses.Num() == TotalSimultaneousRequests)
@@ -53,7 +53,7 @@ void FHttpRequestsSpec::Define()
 					HttpRequests::Get(TEXT("https://jsonplaceholder.typicode.com/posts/1"),
 						[this, TestDone](const FHttpResponse Response)
 						{
-							TestEqual("Response code", Response.ResponseCode, 200);
+							TestEqual("Response code", Response.StatusCode, 200);
 
 							const auto [UserId, Id, Title, Body] = Response.Json<FJsonPlaceholderPost>();
 

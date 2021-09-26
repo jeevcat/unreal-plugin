@@ -3,7 +3,7 @@
 #include "Interfaces/IHttpResponse.h"
 
 FHttpResponse::FHttpResponse(const FHttpResponsePtr Response)
-	: ResponseCode(Response->GetResponseCode()), Content(Response->GetContentAsString())
+	: StatusCode(Response->GetResponseCode()), Text(Response->GetContentAsString())
 
 {
 }
