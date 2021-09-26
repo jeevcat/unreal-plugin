@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Interfaces/IHttpRequest.h"
+#include "JsonObjectConverter.h"
 
 #include "HttpResponse.generated.h"
 
@@ -14,11 +15,13 @@ struct FHttpResponse
 
 	explicit FHttpResponse(const FHttpResponsePtr Response);
 
+	/**
+	 * Deserializes the JSON content of this response to a UStruct
+	 * @tparam T The type of UStruct to attempt to deserialize to
+	 * @return A new UStruct filled from the JSON content
+	 */
 	template <class T>
-	T Json()
-	{
-		return {};
-	}
+	T Json() const;
 
 	UPROPERTY(BlueprintReadOnly)
 	int32 ResponseCode;
@@ -26,3 +29,11 @@ struct FHttpResponse
 	UPROPERTY(BlueprintReadOnly)
 	FString Content;
 };
+
+template <class T>
+T FHttpResponse::Json() const
+{
+	T OutData;
+	FJsonObjectConverter::JsonObjectStringToUStruct<T>(Content, &OutData);
+	return OutData;
+}

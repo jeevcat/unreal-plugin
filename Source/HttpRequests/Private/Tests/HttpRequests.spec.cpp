@@ -1,5 +1,6 @@
 ﻿#include "HttpRequests.h"
 
+#include "JsonPlaceholderPost.h"
 #include "Misc/AutomationTest.h"
 
 BEGIN_DEFINE_SPEC(FHttpRequestsSpec, "UnrealPlugin.HttpRequests",
@@ -44,6 +45,30 @@ void FHttpRequestsSpec::Define()
 								}
 							});
 					}
+				});
+
+			LatentIt("should deserialize JSON", EAsyncExecution::ThreadPool,
+				[this](const FDoneDelegate TestDone)
+				{
+					HttpRequests::Get(TEXT("https://jsonplaceholder.typicode.com/posts/1"),
+						[this, TestDone](const FHttpResponse Response)
+						{
+							TestEqual("Response code", Response.ResponseCode, 200);
+
+							const auto [UserId, Id, Title, Body] = Response.Json<FJsonPlaceholderPost>();
+
+							TestEqual("UserId", UserId, 1);
+							TestEqual("Id", Id, 1);
+							TestEqual(
+								"Title", Title, TEXT("sunt aut facere repellat provident occaecati excepturi optio reprehenderit"));
+							TestEqual("Body", Body,
+								TEXT("quia et suscipit\n"
+									 "suscipit recusandae consequuntur expedita et cum\n"
+									 "reprehenderit molestiae ut ut quas totam\n"
+									 "nostrum rerum est autem sunt rem eveniet architecto"));
+
+							TestDone.Execute();
+						});
 				});
 		});
 }
