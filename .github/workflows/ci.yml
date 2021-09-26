@@ -25,7 +25,6 @@ jobs:
     runs-on: self-hosted
     container:
       image: cloud.canister.io:5000/jeevcat/ue4-full:4.27.0-linux
-      options: --user ue4 -v ${{ github.workspace }}:/home/ue4/__w:rw
       credentials:
          username: jeevcat
          password: ${{ secrets.CANISTER_PASSWORD }}
@@ -34,18 +33,21 @@ jobs:
       - uses: actions/checkout@v2
         with:
           repository: jeevcat/dummy-unreal-project
+          path: /home/ue4/p
         name: 🛒 Checkout dummy UE4 project
 
       - uses: actions/checkout@v2
         with:
-          path: Plugins
+          path: /home/ue4/p/Plugins
         name: 🛒 Checkout plugin
 
       - name: 🧪 Run tests
         run: ue4 test UnrealPlugin
+        working-directory: /home/ue4/p
       
       - name: 🏭 Generate JUnit report
         shell: python
+        working-directory: /home/ue4/p
         run: |
           input = 'Saved/Automation/Reports/index.json'
           output = 'Saved/Automation/Reports/report.xml'
@@ -73,15 +75,14 @@ jobs:
       - name: ⚗️ Publish Unit Test Results
         uses: EnricoMi/publish-unit-test-result-action@v1
         with:
-          files: Saved/Automation/Reports/report.xml
+          files: /home/ue4/p/Saved/Automation/Reports/report.xml
 
       - name: 📦 Package plugin
-        run: |
-          cd Plugins/UnrealPlugin
-          ue4 package -NoPCH -NoSharedPCH -DisableUnity
+        working-directory: /home/ue4/p/Plugins/UnrealPlugin
+        run: ue4 package -NoPCH -NoSharedPCH -DisableUnity
 
       - uses: actions/upload-artifact@v2
         with:
           name: packaged
-          path: dist
+          path: /home/ue4/p/Plugins/UnrealPlugin/dist
         name: 📁 Upload artifact
