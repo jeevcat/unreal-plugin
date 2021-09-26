@@ -96,5 +96,12 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: packaged
-          path: Plugins/UnrealPlugin/dist
+          # Exclude some directories according to https://www.unrealengine.com/en-US/marketplace-guidelines?sessionInvalidated=true#273a
+          path: |
+            Plugins/UnrealPlugin/dist
+            !Binaries/*
+            !Build/*
+            !Intermediate/*
+            !Saved/*
+
         name: 📁 Upload artifact
