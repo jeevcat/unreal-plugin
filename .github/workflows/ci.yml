@@ -74,6 +74,7 @@ jobs:
               cases.append(case)
           ts = TestSuite(name=data['clientDescriptor'],
                           test_cases=cases, timestamp=data['reportCreatedOn'])
+          print(TestSuite.to_xml_string([ts]))
           with open(output, 'w') as f:
               TestSuite.to_file(f, [ts], prettyprint=False)
 
