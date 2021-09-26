@@ -44,9 +44,9 @@ jobs:
       - name: 🧪 Run tests
         run: |
           chown -R ue4:ue4 ${{ github.workspace }}
-          pushd Plugins/UnrealPlugin
+          cd Plugins/UnrealPlugin
           runuser -u ue4 -- ue4 build
-          popd
+          cd ../..
           runuser -u ue4 -- ue4 test UnrealPlugin -- -ReportExportPath='$pwd/Saved/Automation/Reports'
       
       - name: 🏭 Generate JUnit report
