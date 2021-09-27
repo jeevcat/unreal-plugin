@@ -3,8 +3,6 @@
 #include "JsonPlaceholderPost.h"
 #include "Misc/AutomationTest.h"
 
-// TODO Implement all requests documented in https://jsonplaceholder.typicode.com/guide/
-
 BEGIN_DEFINE_SPEC(FHttpRequestsSpec, "UnrealPlugin.HttpRequests",
 	EAutomationTestFlags::ProductFilter | EAutomationTestFlags::ApplicationContextMask)
 const int32 TotalSimultaneousRequests = 20;
@@ -151,6 +149,24 @@ void FHttpRequestsSpec::Define()
 								TestEqual("Id", Id, FakeId);
 								TestEqual("Title", Title, FakeTitle);
 								TestEqual("Body", Body, FakeBody);
+
+								TestDone.Execute();
+							});
+				});
+		});
+
+	Describe("Delete",
+		[this]
+		{
+			LatentIt("should return 200", EAsyncExecution::ThreadPool,
+				[this](const FDoneDelegate TestDone)
+				{
+					HttpRequests::Delete(TEXT("https://jsonplaceholder.typicode.com/posts/1"))
+						.Send(
+							[=](const FHttpResponse Response)
+							{
+								AddInfo(Response.Text());
+								TestEqual("Response code", Response.Status(), 200);
 
 								TestDone.Execute();
 							});
