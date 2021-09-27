@@ -23,9 +23,9 @@ void FHttpRequestsSpec::Define()
 						.Send(
 							[this, TestDone](const FHttpResponse Response)
 							{
-								AddInfo(Response.Text);
-								TestEqual("Response code", Response.StatusCode, 200);
-								TestTrue("Text", Response.Text.Contains(
+								AddInfo(Response.Text());
+								TestEqual("Response code", Response.Status(), 200);
+								TestTrue("Text", Response.Text().Contains(
 													 "sunt aut facere repellat provident occaecati excepturi optio reprehenderit"));
 								TestDone.Execute();
 							});
@@ -40,7 +40,7 @@ void FHttpRequestsSpec::Define()
 							.Send(
 								[this, TestDone](const FHttpResponse Response)
 								{
-									TestEqual("Response code", Response.StatusCode, 200);
+									TestEqual("Response code", Response.Status(), 200);
 
 									SimultaneousResponses.Add(Response);
 									if (SimultaneousResponses.Num() == TotalSimultaneousRequests)
@@ -58,7 +58,7 @@ void FHttpRequestsSpec::Define()
 						.Send(
 							[this, TestDone](const FHttpResponse Response)
 							{
-								TestEqual("Response code", Response.StatusCode, 200);
+								TestEqual("Response code", Response.Status(), 200);
 
 								const auto [UserId, Id, Title, Body] = Response.Json<FJsonPlaceholderPost>();
 
@@ -71,6 +71,27 @@ void FHttpRequestsSpec::Define()
 										 "suscipit recusandae consequuntur expedita et cum\n"
 										 "reprehenderit molestiae ut ut quas totam\n"
 										 "nostrum rerum est autem sunt rem eveniet architecto"));
+
+								TestDone.Execute();
+							});
+				});
+
+			LatentIt("should filter using query", EAsyncExecution::ThreadPool,
+				[this](const FDoneDelegate TestDone)
+				{
+					constexpr int32 UserId = 1;
+					HttpRequests::Get(TEXT("https://jsonplaceholder.typicode.com/posts"))
+						.Query({{TEXT("userId"), UserId}})
+						.Send(
+							[=](const FHttpResponse Response)
+							{
+								TestEqual("Response code", Response.Status(), 200);
+
+								const TArray<FJsonPlaceholderPost> Posts = Response.JsonArray<FJsonPlaceholderPost>();
+								for (const FJsonPlaceholderPost& Post : Posts)
+								{
+									TestEqual("UserId", Post.UserId, UserId);
+								}
 
 								TestDone.Execute();
 							});
@@ -91,8 +112,8 @@ void FHttpRequestsSpec::Define()
 						.Send(
 							[=](const FHttpResponse Response)
 							{
-								AddInfo(Response.Text);
-								TestEqual("Response code", Response.StatusCode, 201);
+								AddInfo(Response.Text());
+								TestEqual("Response code", Response.Status(), 201);
 
 								const auto [UserId, Id, Title, Body] = Response.Json<FJsonPlaceholderPost>();
 

@@ -2,6 +2,7 @@
 
 #include "GenericPlatform/GenericPlatformHttp.h"
 #include "HttpModule.h"
+#include "Interfaces/IHttpRequest.h"
 
 FRequestBuilder::FRequestBuilder(const FString& Verb, const FString& Url)
 {
@@ -51,6 +52,14 @@ void AppendToString(const FStringFormatArg& Arg, FString& StringToAppendTo)
 FRequestBuilder& FRequestBuilder::Query(const FStringFormatNamedArguments& Query)
 {
 	FString Result = Request->GetURL();
+
+	// Remove any previous query
+	if (int32 FoundIndex; Result.FindChar('?', FoundIndex))
+	{
+		Result.LeftInline(FoundIndex);
+	}
+
+	// Write the new query, if any
 	if (Query.Num() > 0)
 	{
 		Result += TEXT("?");
