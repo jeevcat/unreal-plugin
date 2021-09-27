@@ -16,7 +16,7 @@ public:
 	 * Set the request body.
 	 *
 	 * @param Text The text to be inserted into the body of the request
-	 * @return Builder to continue creating a request
+	 * @return Builder to continue creating a request before sending
 	 */
 	FRequestBuilder& Body(const FString& Text);
 
@@ -26,16 +26,16 @@ public:
 	 * Modifies the URL of this request, overwriting anything that was previously set.
 	 *
 	 * @param Query A map of key-value pairs
-	 * @return Builder to continue creating a request
+	 * @return Builder to continue creating a request before sending
 	 */
 	FRequestBuilder& Query(const FStringFormatNamedArguments& Query);
 
 	/**
 	 * Add a body to the request formatted as JSON.
 	 *
-	 * @tparam T Input struct type
+	 * @tparam T Input struct type - must be a UStruct
 	 * @param Struct Will be serialized as JSON in the body of the request
-	 * @return Builder to continue creating a request
+	 * @return Builder to continue creating a request before sending
 	 */
 	template <class T>
 	FRequestBuilder& Json(const T& Struct);

@@ -6,6 +6,11 @@
 
 #include "HttpResponse.generated.h"
 
+/**
+ * A response to a submitted request.
+ *
+ * Wraps a IHttpResponse with convenience functions for deserializing the body, etc.
+ */
 USTRUCT(BlueprintType)
 struct FHttpResponse
 {
