@@ -101,7 +101,7 @@ void FHttpRequestsSpec::Define()
 	Describe("Post",
 		[this]
 		{
-			LatentIt("should return 200 and new resource", EAsyncExecution::ThreadPool,
+			LatentIt("should return 201 and new resource", EAsyncExecution::ThreadPool,
 				[this](const FDoneDelegate TestDone)
 				{
 					constexpr int32 FakeUserId = 11;
@@ -119,6 +119,36 @@ void FHttpRequestsSpec::Define()
 
 								TestEqual("UserId", UserId, FakeUserId);
 								TestEqual("Id", Id, 101);
+								TestEqual("Title", Title, FakeTitle);
+								TestEqual("Body", Body, FakeBody);
+
+								TestDone.Execute();
+							});
+				});
+		});
+
+	Describe("Put",
+		[this]
+		{
+			LatentIt("should return 200 and updated resource", EAsyncExecution::ThreadPool,
+				[this](const FDoneDelegate TestDone)
+				{
+					constexpr int32 FakeId = 1;
+					constexpr int32 FakeUserId = 11;
+					const FString FakeTitle = TEXT("Foo");
+					const FString FakeBody = TEXT("Bar");
+					HttpRequests::Put(TEXT("https://jsonplaceholder.typicode.com/posts/1"))
+						.Json(FJsonPlaceholderPost{FakeUserId, FakeId, FakeTitle, FakeBody})
+						.Send(
+							[=](const FHttpResponse Response)
+							{
+								AddInfo(Response.Text());
+								TestEqual("Response code", Response.Status(), 200);
+
+								const auto [UserId, Id, Title, Body] = Response.Json<FJsonPlaceholderPost>();
+
+								TestEqual("UserId", UserId, FakeUserId);
+								TestEqual("Id", Id, FakeId);
 								TestEqual("Title", Title, FakeTitle);
 								TestEqual("Body", Body, FakeBody);
 
